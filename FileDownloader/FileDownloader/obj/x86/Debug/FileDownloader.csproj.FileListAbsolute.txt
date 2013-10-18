@@ -1,0 +1,6 @@
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.Properties.Resources.resources
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.csproj.GenerateResource.Cache
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.exe
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.pdb
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.exe
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.pdb
