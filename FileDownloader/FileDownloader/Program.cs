@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-
+using System.Threading;
 namespace FileDownloader
 {
     static class Program
@@ -10,12 +10,13 @@ namespace FileDownloader
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread]
+      //  [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DownloadWindow());
+            
         }
     }
 }

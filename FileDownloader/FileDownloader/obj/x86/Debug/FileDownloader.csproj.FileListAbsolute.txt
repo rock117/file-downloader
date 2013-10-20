@@ -4,3 +4,12 @@ F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\bin\Debug
 F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.pdb
 F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.exe
 F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.pdb
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.exe
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.pdb
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.Properties.Resources.resources
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.exe
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.pdb
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.DownloadWindow.resources

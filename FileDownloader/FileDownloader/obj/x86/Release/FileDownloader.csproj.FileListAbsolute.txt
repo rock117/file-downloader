@@ -1,0 +1,9 @@
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Release\FileDownloader.exe
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Release\FileDownloader.pdb
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\ResolveAssemblyReference.cache
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\FileDownloader.Properties.Resources.resources
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\GenerateResource.read.1.tlog
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\GenerateResource.write.1.tlog
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\FileDownloader.exe
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\FileDownloader.pdb
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Release\FileDownloader.DownloadWindow.resources
