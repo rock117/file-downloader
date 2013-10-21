@@ -12,23 +12,44 @@ namespace FileDownloader
         #region Task Members
         private string url;
         private string fileName;
-        private int curr = 0;
+        private long curr = 0;
         private long size = -1;
+        public bool pause {get;set;}
+        private object lockCurr = new object();
+        private List<DownloadWorker> workers = new List<DownloadWorker>();
         public DownloadTask(string url, string fileName)
         {
             this.url = url;
             this.fileName = fileName;
+            this.pause = false;
         }
 
         public bool isDone()
         {
-            return false;
+            return size == curr;
+        }
+        private void increaseCurrent(int len){
+              
+            curr+=len;
+              
+        }
+
+        private long getCurrent(){
+            if(curr == size){
+                return curr;
+            }
+            for(var i=0; i<workers.Count; i++){
+                curr+=workers[i].current;
+            }
+            return curr;
         }
 
         public void begin()
         {
             HttpWebResponse res = HttpUtil.get(url, 0, SysConfig.DOWNLOAD_UNIT);
             HttpStatusCode status = res.StatusCode;
+            CalculatePercentWorker calcWorker = new CalculatePercentWorker(this);
+            new Thread(new ThreadStart(calcWorker.calcPercent)).Start();
             if (status == HttpStatusCode.OK)
             {
                 FileStream fileStream = new FileStream(fileName, FileMode.Create);
@@ -37,9 +58,14 @@ namespace FileDownloader
                 byte[] buffer = new byte[SysConfig.DOWNLOAD_UNIT];
                 int len;
                 while((len = stream.Read(buffer, 0, SysConfig.DOWNLOAD_UNIT))>0){
-                    curr+=len;
-                    fileStream.Write(buffer,0,len);
-                    fileStream.Flush();
+                    if(!pause){
+                        increaseCurrent(len);
+                        fileStream.Write(buffer,0,len);
+                        fileStream.Flush();
+                    }
+                    else{
+                        break;
+                    }
                 }
                 fileStream.Close();
                 res.Close();
@@ -54,7 +80,7 @@ namespace FileDownloader
                 List<DownloadRange> ranges = splitRange(SysConfig.DOWNLOAD_UNIT, size, 5);
                 for (var i = 0; i < ranges.Count; i++)
                 {
-                    DownloadWorker worker = new DownloadWorker(url, fileName, ranges[i]);
+                    DownloadWorker worker = new DownloadWorker(url, fileName, ranges[i], this);
                     Thread thread = new Thread(new ThreadStart(worker.doWork));
                     thread.Start();
                 }
@@ -88,17 +114,39 @@ namespace FileDownloader
         #endregion
     }
 
+    public class CalculatePercentWorker{
+        private DownloadTask task;
+        private string percent;
+        public CalculatePercentWorker(DownloadTask task){
+            this.task = task;
+        }
+        public void calcPercent(){
+            while(true){
+                Thread.Sleep(1000);
+                this.percent = task.percent();
+                if(task.isDone()){
+                    break;
+                }
+            }
+        }
+        public string getPercent(){
+            return percent;
+        }
+    }
+
     class DownloadWorker
     {
         DownloadRange range;
         string url;
         string fileName;
-        long current = 0;
-        public DownloadWorker(string url, string fileName, DownloadRange range)
+        public long current = 0;
+        DownloadTask task;
+        public DownloadWorker(string url, string fileName, DownloadRange range, DownloadTask task)
         {
             this.url = url;
             this.fileName = fileName;
             this.range = range;
+            this.task = task;
         }
         public void doWork()
         {
@@ -108,7 +156,12 @@ namespace FileDownloader
             byte[] buffer = new byte[SysConfig.DOWNLOAD_UNIT];
             int len;
             while((len = stream.Read(buffer, 0, SysConfig.DOWNLOAD_UNIT))>0){
-                current+=len;
+                if(!task.pause){
+                    current += len;
+                }
+                else{
+                    break;
+                }
             }
             res.Close();
         }

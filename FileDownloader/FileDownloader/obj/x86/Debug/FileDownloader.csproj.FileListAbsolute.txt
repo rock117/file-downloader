@@ -13,3 +13,4 @@ E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\ob
 E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.exe
 E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.pdb
 E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.DownloadWindow.resources
+F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.DownloadWindow.resources
