@@ -74,16 +74,34 @@ namespace FileDownloader
             {
                 string contentRange = res.Headers["Content-Range"];
                 int lenIndex = contentRange.LastIndexOf('/');
-                string lenStr = contentRange.Substring(lenIndex + 1, contentRange.Length - lenIndex);// = contentRange.Substring();//bytes 0-100/12690720
+                string lenStr = contentRange.Substring(lenIndex + 1, contentRange.Length-1 - lenIndex);// = contentRange.Substring();//bytes 0-100/12690720
                 size = Int32.Parse(lenStr);
-
+                List<Thread> workers = new List<Thread>();
                 List<DownloadRange> ranges = splitRange(SysConfig.DOWNLOAD_UNIT, size, 5);
+                Dictionary<string, DownloadWorker> datas = new Dictionary<string, DownloadWorker>();
                 for (var i = 0; i < ranges.Count; i++)
                 {
+                   
                     DownloadWorker worker = new DownloadWorker(url, fileName, ranges[i], this);
+                    datas.Add(i + "", worker);
                     Thread thread = new Thread(new ThreadStart(worker.doWork));
+                    workers.Add(thread);
                     thread.Start();
+                   
                 }
+
+                for (var i = 0; i < ranges.Count; i++)
+                {
+                    workers[i].Join();
+                }
+
+                FileStream fs = new FileStream(fileName, FileMode.Create);
+                for (var i = 0; i < ranges.Count; i++)
+                {
+                    byte[] data = datas[i + ""].stream.ToArray();
+                    fs.Write(data, 0, data.Length);
+                }
+                fs.Close();
             }
         }
 
@@ -99,17 +117,21 @@ namespace FileDownloader
         public List<DownloadRange> splitRange(long from, long to, long n)
         {
             List<DownloadRange> list = new List<DownloadRange>();
-            long delta = to - from;
-            long per = delta / n;
-            for (long i = 0; i < n; i++)
-            {
-                long from1 = from + i * per;
-                long to1 = from + per;
-                if (i == n - 1)
-                    to1 = to;
-                list.Add(new DownloadRange(from1, to1));
-            }
-            return list;
+             long delta = to - from;
+             long per = delta / n;
+             long total = 0;
+             long f=0;
+             long t;
+             for (long i = 0; i < n; i++)
+             {
+        	     t = f+per-1;
+        	     if(i==n-1)
+        		     t = to-1;
+                 list.Add(new DownloadRange(f, t));
+                 f = t+1;
+             }
+              
+             return list;
         }
         #endregion
     }
@@ -141,12 +163,16 @@ namespace FileDownloader
         string fileName;
         public long current = 0;
         DownloadTask task;
+        public MemoryStream stream { get; set; }
+        public string id { get; set; }
         public DownloadWorker(string url, string fileName, DownloadRange range, DownloadTask task)
         {
             this.url = url;
             this.fileName = fileName;
             this.range = range;
             this.task = task;
+            this.stream = new MemoryStream();
+           
         }
         public void doWork()
         {
@@ -158,6 +184,7 @@ namespace FileDownloader
             while((len = stream.Read(buffer, 0, SysConfig.DOWNLOAD_UNIT))>0){
                 if(!task.pause){
                     current += len;
+                    this.stream.Write(buffer, 0, len);
                 }
                 else{
                     break;

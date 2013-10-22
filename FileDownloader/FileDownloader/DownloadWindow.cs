@@ -32,7 +32,10 @@ namespace FileDownloader
            //stringToFile("d:/tmp22.html", mem.ToArray());
            //res.Close();
           //  HttpUtil.download("http://cdn.market.hiapk.com/data/upload/2013/09_27/15/com.argtgames.xiuxianjie_153434.apk");
-            HttpUtil.download("http://cdn.market.hiapk.com/data/upload/2013/09_27/15/com.argtgames.xiuxianjie_153434.apk");
+           // HttpUtil.download("http://img7.9158.com/200708/23/23/32/2007082308159.jpg");
+            Task task = new DownloadTask("http://img7.9158.com/200708/23/23/32/2007082308159.jpg", "D:/temp/kkk.jpg");
+            task.begin();
+
              
         }
 
@@ -48,6 +51,11 @@ namespace FileDownloader
             //关闭流
             sw.Close();
             fs.Close();
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }
