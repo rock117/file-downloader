@@ -30,7 +30,7 @@ namespace FileDownloader
         {
             size = -1;
             curr = -1;
-            pause = false;
+            pause = true;
         }
         public long getSize()
         {
@@ -38,11 +38,21 @@ namespace FileDownloader
         }
         public long getCurrent()
         {
+            long total = 0;
+            foreach (Worker worker in workers)
+            {
+                total += worker.getCurrent();
+            }
+            curr = total;
             return curr;
         }
         public void stop()
         {
             this.pause = true;
+        }
+        public bool isPause()
+        {
+            return this.pause;
         }
         public void start()
         {
@@ -105,7 +115,7 @@ namespace FileDownloader
 
         public bool isDone()
         {
-            return curr != -1 && curr == size;
+            return size != -1 && curr == size;
         }
     }
 }

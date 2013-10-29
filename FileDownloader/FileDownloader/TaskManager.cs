@@ -7,23 +7,32 @@ namespace FileDownloader
 {
     public class TaskManager
     {
-        //private List<Task> activeTasks = new List<Task>();
-        //private List<Task> finishedTasks = new List<Task>();
-        //public void createTask(Task task) 
-        //{
-        //    activeTasks.Add(task);
-        //}
+        private List<Task> activeTasks = new List<Task>();
+        private List<Task> finishedTasks = new List<Task>();
+        private static TaskManager taskManager = new TaskManager();
+        public Task createTask(DownloadTaskEntry entry)
+        {
+            Task task = new DownloadTask(entry.url, entry.fileName);
+            activeTasks.Add(task);           
+            return task;
+        }
+        public static TaskManager getInstance()
+        {
 
-        //public void scheduleTask() {
-        //    while (true)
-        //    {
-        //        foreach (Task task in activeTasks)
-        //        {
-                     
-        //        }
-        //        Thread.Sleep(1000);
-        //    }
-        //}
+            return taskManager;
+        }
+        public void scheduleTask()
+        {
+            while (true)
+            {
+                foreach (Task task in activeTasks)
+                {
+                    if(task.isPause())
+                        new Thread(new ThreadStart(task.start)).Start();
+                }
+                Thread.Sleep(1000);
+            }
+        }
 
     }
 }

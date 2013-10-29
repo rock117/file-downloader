@@ -77,10 +77,11 @@ namespace FileDownloader
         private void addTask(string url)
         {
             string fileName = FileNameCreator.createByUrl(url);
-            Task task = new DownloadTask(url, fileName);
+           
+            Task task = TaskManager.getInstance().createTask(url, fileName);
             this.addRow(convert((DownloadTask)task));
             taskList.Add(task);
-            new Thread(new ThreadStart(task.start)).Start();
+           
         }
 
        
