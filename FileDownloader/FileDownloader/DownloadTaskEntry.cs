@@ -7,8 +7,11 @@ namespace FileDownloader
 {
     public class DownloadTaskEntry
     {
+        public string id { get; set; }
         public string url { get; set; }
         public string fileName { get; set; }
         public bool isDone { get; set; }
+        public string percent { get; set; }
+        public string leftTime { get; set; }
     }
 }

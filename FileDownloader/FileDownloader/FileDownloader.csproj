@@ -55,12 +55,15 @@
     <Compile Include="DownloadWindow.Designer.cs">
       <DependentUpon>DownloadWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="FileNameCreator.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="HttpUtil.cs" />
+    <Compile Include="NumberUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SysConfig.cs" />
     <Compile Include="Task.cs" />
+    <Compile Include="TaskManager.cs" />
     <Compile Include="Worker.cs" />
     <Compile Include="WorkerGroup.cs" />
     <EmbeddedResource Include="DownloadWindow.resx">

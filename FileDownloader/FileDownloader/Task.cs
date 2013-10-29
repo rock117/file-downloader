@@ -7,8 +7,8 @@ namespace FileDownloader
 {
     interface Task
     {
+        void start();
+        void stop();
         bool isDone();
-        void begin();
-        string percent();
     }
 }

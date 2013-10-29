@@ -85,8 +85,10 @@ namespace FileDownloader
             {
                 request.AddRange(to * (-1));
             }
-           
+            request.Timeout = 30 * 1000;
+            request.ReadWriteTimeout = 50 * 1000;
             request.Method = "GET";           
+           // System.Diagnostics.Debug.Print(
             return (HttpWebResponse)request.GetResponse();
         }
 
