@@ -27,7 +27,7 @@ namespace FileDownloader
             {
                 foreach (Task task in activeTasks)
                 {
-                    if(task.isPause())
+                    if(!task.isDone() && task.isPause())
                         new Thread(new ThreadStart(task.start)).Start();
                 }
                 Thread.Sleep(1000);
