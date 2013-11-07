@@ -13,5 +13,8 @@ namespace FileDownloader
         public bool isDone { get; set; }
         public string percent { get; set; }
         public string leftTime { get; set; }
+        public string speed { get; set; }
+        public double speedL { get; set; }
+       
     }
 }

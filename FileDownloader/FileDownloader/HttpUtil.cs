@@ -9,51 +9,23 @@ namespace FileDownloader
 {
     public class HttpUtil
     {
-        public byte[] get(string url, Dictionary<string,string> headers) {
-
-            return null;
-        }
-
-        public static void head(string url) {
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "HEAD";
-            request.Timeout = 30000;
-            request.ReadWriteTimeout = 30000;
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            var st = response.StatusCode;
-        }
-
-
-        public static void download(string url)
+        private static HttpUtil instance = new HttpUtil();
+        private HttpUtil()
         {
-            string dir = "d:/temp";
-            int index = url.LastIndexOf('/');
-            string fileName = "";// url.Substring(index + 1, url.Length - index);
-
-
-            HttpWebResponse res = get(url, 0, 1111111111);// get(url, 0, SysConfig.DOWNLOAD_UNIT);
-            HttpStatusCode status =  res.StatusCode;
-            
-            string contentRange = res.Headers["Content-Range"];
-            if (status == HttpStatusCode.PartialContent)
-            {
-                int lenIndex = contentRange.LastIndexOf('/');
-                string lenStr = contentRange.Substring(lenIndex + 1, contentRange.Length - lenIndex);// = contentRange.Substring();//bytes 0-100/12690720
-                int len = Int32.Parse(lenStr);
-            }
-            else if (status == HttpStatusCode.OK)
-            {
-                FileUtil.streamToFile("d:/temp/aa.apk", res.GetResponseStream());
-               
-            }
-            else
-            {
-
-            }
+            System.Net.ServicePointManager.DefaultConnectionLimit = Int32.MaxValue;
         }
 
-        public static List<Range> splitRange(int from, int to, int n)
+
+
+        public static HttpUtil getInstance() {
+            return instance;
+        }
+       
+
+
+       
+
+        public  List<Range> splitRange(int from, int to, int n)
         {
             List<Range> list = new List<Range>();
             int delta = to - from;
@@ -70,9 +42,13 @@ namespace FileDownloader
         }
 
       
-        public static HttpWebResponse get(string url, long from, long to)
+        public  HttpWebResponse get(string url, long from, long to)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServicePoint.ConnectionLimit = Int32.MaxValue;
+            
+            //System.Net.WebProxy proxy = new WebProxy("127.0.0.1", 8888);
+           // request.Proxy = proxy;
             if (from != null && to != null)
             {
                 request.AddRange(from, to);
@@ -85,10 +61,12 @@ namespace FileDownloader
             {
                 request.AddRange(to * (-1));
             }
+            //request.KeepAlive = false;
             request.Timeout = 30 * 1000;
             request.ReadWriteTimeout = 50 * 1000;
             request.Method = "GET";           
            // System.Diagnostics.Debug.Print(
+            
             return (HttpWebResponse)request.GetResponse();
         }
 

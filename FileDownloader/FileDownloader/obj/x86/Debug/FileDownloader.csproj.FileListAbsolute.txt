@@ -14,3 +14,7 @@ E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bi
 E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.pdb
 E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.DownloadWindow.resources
 F:\workspace_f\my-github\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.DownloadWindow.resources
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\obj\x86\Debug\FileDownloader.NewDownloadForm.resources
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\FileDownloader.exe.config
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\log4net.dll
+E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\bin\Debug\log4net.xml

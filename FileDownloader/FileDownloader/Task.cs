@@ -5,11 +5,15 @@ using System.Text;
 
 namespace FileDownloader
 {
+   
     public interface Task
     {
+        long getCurrent();
+        string getId();
         void start();
         void stop();
         bool isDone();
-        bool isPause();
+        TaskStatus getStatus();
+        void setStatus(TaskStatus status);
     }
 }
