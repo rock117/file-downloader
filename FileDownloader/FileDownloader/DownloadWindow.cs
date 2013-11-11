@@ -237,10 +237,17 @@ namespace FileDownloader
                     string id = this.taskGrid.Rows[i].Cells[0].Value.ToString();
                     if (id == taskId)
                     {
+                        var speed = taskEntry.speed;
+                        var leftTime = taskEntry.leftTime;
+                        if (taskEntry.isDone)
+                        {
+                            speed = "";
+                            leftTime = "";
+                        }
                         //this.taskGrid.Rows[i].Cells[1].Value = taskEntry.fileName;
                         this.taskGrid.Rows[i].Cells[2].Value = taskEntry.percent;
-                        this.taskGrid.Rows[i].Cells[3].Value = taskEntry.speed;
-                        this.taskGrid.Rows[i].Cells[4].Value = taskEntry.leftTime;
+                        this.taskGrid.Rows[i].Cells[3].Value = speed;
+                        this.taskGrid.Rows[i].Cells[4].Value = leftTime;
                         this.taskGrid.Rows[i].Cells[5].Value = GlobalUtil.formatTime(taskEntry.finishedTime);
                         break;
                     }
