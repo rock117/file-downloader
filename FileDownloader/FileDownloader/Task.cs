@@ -15,5 +15,7 @@ namespace FileDownloader
         bool isDone();
         TaskStatus getStatus();
         void setStatus(TaskStatus status);
+        void rebirth();
+        DateTime finishedTime(DateTime finishedTime);
     }
 }

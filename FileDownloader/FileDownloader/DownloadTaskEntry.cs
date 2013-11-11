@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FileDownloader
 {
-    public class DownloadTaskEntry
+    public class DownloadTaskEntry:IEquatable<DownloadTaskEntry>
     {
         public string id { get; set; }
         public string url { get; set; }
@@ -15,6 +15,18 @@ namespace FileDownloader
         public string leftTime { get; set; }
         public string speed { get; set; }
         public double speedL { get; set; }
-       
+        public DateTime finishedTime { get; set; }
+        
+    
+ 
+
+        public bool  Equals(DownloadTaskEntry other)
+        {
+            if (other == null)
+                return false;
+            return id == other.id;
+        }
+
+ 
     }
 }

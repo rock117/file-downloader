@@ -16,6 +16,15 @@ using System.Text.RegularExpressions;
 
 namespace FileDownloader
 {
+
+    enum ShowMode
+    {
+
+        All,
+        Finished,
+        Running
+    }
+
     public partial class DownloadWindow : Form
     {
 
@@ -30,6 +39,22 @@ namespace FileDownloader
         private BackgroundWorker backgroundWorker;
         private string speedTxt = "";
         private delegate void InvokeCallback(string msg);
+        private ShowMode showMode = ShowMode.All;
+
+
+        private const int ID = 0;
+        private const int NAME = 1;
+        private const int PERCENT = 2;
+        private const int SPEED = 3;
+        private const int LEFT_TIME = 4;
+        private const int FINISHED_TIME = 4;
+
+
+
+
+
+
+
         public DownloadWindow()
         {
             InitializeComponent();
@@ -63,13 +88,54 @@ namespace FileDownloader
         }
         protected void initGrid()
         {
+            
             this.taskGrid.ColumnCount = 6;
             this.taskGrid.Columns[0].Visible = false;
-            this.taskGrid.Columns[1].Name = "Name";
-            this.taskGrid.Columns[2].Name = "Percent";
-            this.taskGrid.Columns[3].Name = "speed";
-            this.taskGrid.Columns[4].Name = "left time";
-            this.taskGrid.Columns[5].Visible = false;
+            this.taskGrid.Columns[1].Name = "文件名";
+            this.taskGrid.Columns[2].Name = "下载进度";
+            this.taskGrid.Columns[3].Name = "下载速度";
+            this.taskGrid.Columns[4].Name = "剩余时间";
+            this.taskGrid.Columns[5].Name = "完成时间";
+        }
+        
+        private void showFinishedTasks()
+        {
+            List<DownloadTaskEntry> taskList = taskManager.getFinishedTasks();
+            this.showTasks(taskList);
+        }
+        private void showAllTasks()
+        {            
+            List<DownloadTaskEntry> taskList = taskManager.getAllTasks();
+            this.showTasks(taskList);
+        }
+
+        private void showTasks(List<DownloadTaskEntry> taskList)
+        {
+            try
+            {
+                int rowCount = this.taskGrid.RowCount;
+                for (int i = 0; i < rowCount; i++)
+                {
+                    var id = this.taskGrid.Rows[i].Cells[0].Value.ToString();
+                    if (GlobalUtil.contains(taskList, id))
+                        this.taskGrid.Rows[i].Visible = true;
+                    else
+                        this.taskGrid.Rows[i].Visible = false;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+          
+
+        }
+
+        private void showRunningTasks()
+        {
+            List<DownloadTaskEntry> taskList = taskManager.getRunningTasks();
+            this.showTasks(taskList);
+
         }
         /// <summary>
         /// add grid rows
@@ -84,7 +150,7 @@ namespace FileDownloader
         }
         private void addRow(DownloadTaskEntry entry)
         {
-          this.taskGrid.Rows.Add(new string[] { entry.id, entry.fileName, entry.percent, entry.speed, entry.leftTime,entry.url });     
+          this.taskGrid.Rows.Add(new string[] { entry.id, entry.fileName, entry.percent, entry.speed, entry.leftTime,GlobalUtil.formatTime(entry.finishedTime) });     
         }
         private void newButton_Click(object sender, EventArgs e)
         {
@@ -122,15 +188,14 @@ namespace FileDownloader
         {
             while (true)
             {
-                List<Task> taskList = taskManager.getActiveTasks();
+                List<DownloadTaskEntry> taskList = taskManager.getAllTasks();
                 double speed = 0.0;
-                foreach (Task task in taskList)
+                foreach (DownloadTaskEntry taskEntry in taskList)
                 {
-                    DownloadTaskEntry taskEntry = this.convert(task);
                     speed += taskEntry.speedL;
                     updateGrid(taskEntry);
                 }
-                 
+
                 string speedStr = NumberUtil.toFixed(speed, 1) + " k/s";
                 if (speed >= _1K)
                 {
@@ -138,6 +203,24 @@ namespace FileDownloader
                 }
                 this.speedTxt = "下载速度 " + speedStr;
                 this.speedLabel.Text = this.speedTxt;
+
+                switch (this.showMode)
+                {
+                    case ShowMode.All:
+                        this.showAllTasks();
+                        break;
+                    case ShowMode.Finished:
+                        this.showFinishedTasks();
+                        break;
+                    case ShowMode.Running:
+                        this.showRunningTasks();
+                        break;
+                    default:
+                        break;
+
+                }
+
+               
                 Thread.Sleep(1000);
 
             }
@@ -149,14 +232,21 @@ namespace FileDownloader
             int rowCount = this.taskGrid.RowCount;
             for (int i = 0; i < rowCount; i++)
             {
-                string id = this.taskGrid.Rows[i].Cells[0].Value.ToString();
-                if (id == taskId)
+                try
                 {
-                    //this.taskGrid.Rows[i].Cells[1].Value = taskEntry.fileName;
-                    this.taskGrid.Rows[i].Cells[2].Value = taskEntry.percent;
-                    this.taskGrid.Rows[i].Cells[3].Value = taskEntry.speed;
-                    this.taskGrid.Rows[i].Cells[4].Value = taskEntry.leftTime;
-                    break;
+                    string id = this.taskGrid.Rows[i].Cells[0].Value.ToString();
+                    if (id == taskId)
+                    {
+                        //this.taskGrid.Rows[i].Cells[1].Value = taskEntry.fileName;
+                        this.taskGrid.Rows[i].Cells[2].Value = taskEntry.percent;
+                        this.taskGrid.Rows[i].Cells[3].Value = taskEntry.speed;
+                        this.taskGrid.Rows[i].Cells[4].Value = taskEntry.leftTime;
+                        this.taskGrid.Rows[i].Cells[5].Value = GlobalUtil.formatTime(taskEntry.finishedTime);
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
                 }
             }
         }
@@ -240,8 +330,17 @@ namespace FileDownloader
             int rowNum = this.taskGrid.SelectedRows.Count;
             for (int i = 0; i < rowNum; i++)
             {
-                string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
-                taskManager.startTask(id);
+                try
+                {
+                    string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
+                    taskManager.startTask(id);
+                }
+                catch (Exception ee)
+                {
+
+                }
+           
+               
             }
         }
 
@@ -270,19 +369,20 @@ namespace FileDownloader
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            int rowNum = this.taskGrid.SelectedRows.Count;
-            List<DataGridViewRow> list = new List<DataGridViewRow>();
-            for (int i = 0; i < rowNum; i++)
-            {
-                string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
-                taskManager.removeTask(id);
-                list.Add(this.taskGrid.SelectedRows[i]);
-            }
+             
+            //int rowNum = this.taskGrid.SelectedRows.Count;
+            //List<DataGridViewRow> list = new List<DataGridViewRow>();
+            //for (int i = 0; i < rowNum; i++)
+            //{
+            //    string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
+            //    taskManager.removeTask(id);
+            //    list.Add(this.taskGrid.SelectedRows[i]);
+            //}
 
-            foreach (DataGridViewRow row in list)
-            {
-                this.taskGrid.Rows.Remove(row);
-            }
+            //foreach (DataGridViewRow row in list)
+            //{
+            //    this.taskGrid.Rows.Remove(row);
+            //}
 
         }
 
@@ -367,6 +467,24 @@ namespace FileDownloader
         {
            //this.taskGrid.Rows[e.RowIndex];
 
+        }
+
+        private void doneTaskBtn_Click(object sender, EventArgs e)
+        {
+            this.showMode = ShowMode.Finished;
+            this.showFinishedTasks();
+        }
+
+        private void downloadingBtn_Click(object sender, EventArgs e)
+        {
+            this.showMode = ShowMode.Running;
+            this.showRunningTasks();
+        }
+
+        private void allTaskBtn_Click(object sender, EventArgs e)
+        {
+            this.showMode = ShowMode.All;
+            this.showAllTasks();
         }
 
     }

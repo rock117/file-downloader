@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertUtil.cs" />
     <Compile Include="DownloadRange.cs" />
     <Compile Include="DownloadTask.cs" />
     <Compile Include="DownloadTaskEntry.cs" />
@@ -78,8 +79,11 @@
     <Compile Include="TaskManager.cs" />
     <Compile Include="TaskManagerFactory.cs" />
     <Compile Include="TaskStatus.cs" />
+    <Compile Include="TaskStatusChangedEvent.cs" />
     <Compile Include="Worker.cs" />
     <Compile Include="WorkerGroup.cs" />
+    <Compile Include="WorkerStatus.cs" />
+    <Compile Include="WorkerStatusChangedEvent.cs" />
     <EmbeddedResource Include="DownloadWindow.resx">
       <DependentUpon>DownloadWindow.cs</DependentUpon>
     </EmbeddedResource>

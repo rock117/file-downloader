@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using FileDownloader.Event;
 namespace FileDownloader
 {
     [Serializable]
@@ -24,6 +25,12 @@ namespace FileDownloader
 
         private HttpUtil HttpUtil = HttpUtil.getInstance();
         private TaskStatus status;
+
+        public delegate void TaskStatusChanged(TaskStatusChangedEvent e);
+        public event TaskStatusChanged onTaskStatusChanged;
+
+        private int errNums = 0;
+        private DateTime _finishedTime;
         public DownloadTask(string url, string dir, string fileName)
         {
             this.url = url;
@@ -32,13 +39,43 @@ namespace FileDownloader
             this.id = System.Guid.NewGuid().ToString();
             init();
         }
+        public void OnWorkerStatusChanged(WorkerStatusChangedEvent e)
+        {
+            if (size == -1 || workers == null || workers.Count == 0)
+            {
+                return;
+            }
+            Worker worker = e.worker;
+            if(e.to == WorkerStatus.Finished){
+                int doNum = 0;
+                foreach (Worker w in workers)
+                {
+                    if (w.isDone())
+                        doNum++;
+                }
+                if (doNum == workers.Count)
+                {
+                     onTaskStatusChanged(new TaskStatusChangedEvent(this,this.status,TaskStatus.Finished));
+                }
+            }
+            else if (e.to == WorkerStatus.Sicked)
+            {
+                errNums++;
+                TaskStatus to = errNums<10?TaskStatus.Waiting:TaskStatus.Dead;
+                onTaskStatusChanged(new TaskStatusChangedEvent(this, this.status, to));
+            }
+
+
+
+
+        }
         private void init()
         {
             lastPos = 0;
             size = -1;
             curr = -1;
-            pause = true;
-            this.status = TaskStatus.BeBorn;   
+            errNums = 0;
+            
         }
         public long getSize()
         {
@@ -67,37 +104,27 @@ namespace FileDownloader
         }
         public void stop()
         {
-            this.status = TaskStatus.Runnable;
-           
+           // this.status = TaskStatus.Runnable;
+            throw new Exception("err stop");
         }
       
         public void start()
         {
             Logger.getLogger().info("task " + this.id + " start , status:" + this.status);
-            this.status = TaskStatus.Running;
-           
-            if (this.isDone())
-            {
-
-                return;
-            }
-            
-            
             if (workers == null)
             {
                 
                 try
                 {
-                    calcSize();
-                    //int j = 0;
-                    //int i = 1 / j;
+                    calcSize();         
                 }
                 catch (Exception e)
                 {
-                  // MessageBox.Show(e.Message);
+                    errNums++;
                     workers = null;
-                    this.status = TaskStatus.BeBorn;
-                    Logger.getLogger().error("task " + this.id + " err:"+e.ToString()+",task status"+this.status);
+                    Logger.getLogger().error("task " + this.id + " err:"+e.Message+",task status"+this.status);
+                    TaskStatus to = errNums<10?TaskStatus.Waiting:TaskStatus.Dead;
+                    this.onTaskStatusChanged(new TaskStatusChangedEvent(this, this.status, to));
                     return;
                 }
             }
@@ -123,8 +150,10 @@ namespace FileDownloader
             res.Close();
             if (status == HttpStatusCode.OK)
             {
+                Worker worker = new Worker(this, new DownloadRange(0, size - 1));
+                worker.onWorkerStatusChanged += this.OnWorkerStatusChanged;
                 this.size = res.ContentLength;
-                workers.Add(new Worker(this, new DownloadRange(0, size-1)));
+                workers.Add(worker);
             }
             else if (status == HttpStatusCode.PartialContent)
             {
@@ -135,14 +164,16 @@ namespace FileDownloader
                 List<DownloadRange> ranges = DownloadRange.splitRange(0, size, SysConfig.WORKERS_NUM);
                 foreach (DownloadRange range in ranges)
                 {
-                    workers.Add(new Worker(this, range));
+                    Worker worker = new Worker(this, range);
+                    worker.onWorkerStatusChanged += this.OnWorkerStatusChanged;
+                    workers.Add(worker);
                     Console.WriteLine(range.from + "," + range.to);
                 }
             }
             else
             {
                
-                throw new Exception("error status:" + status);
+                throw new Exception("error http status:" + status);
             }
            
         }
@@ -153,26 +184,7 @@ namespace FileDownloader
            
         }
 
-        public void fireWorkDone()
-        {
-            
-            if (size == -1 || workers == null || workers.Count == 0)
-            {
-                return ;
-            }
-
-            int doNum = 0;
-            foreach (Worker worker in workers)
-            {
-                if (worker.isDone())
-                    doNum++;
-            }
-            if (doNum == workers.Count)
-            {
-                status = TaskStatus.Finished;
-                TaskManager.getInstance().fireTaskDone(this);
-            }
-        }
+       
 
         #region Task 成员
 
@@ -205,6 +217,23 @@ namespace FileDownloader
         public void rebootWorker(Worker worker)
         {
             worker.doWork(); 
+        }
+        public void rebirth()
+        {
+            init();
+        }
+
+        
+        #endregion
+
+        #region Task 成员
+
+
+        public DateTime finishedTime(DateTime finishedTime)
+        {
+            if (finishedTime != DateTime.MinValue)
+                this._finishedTime = finishedTime;
+            return _finishedTime;
         }
 
         #endregion

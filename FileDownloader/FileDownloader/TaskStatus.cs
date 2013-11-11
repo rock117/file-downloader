@@ -7,11 +7,11 @@ namespace FileDownloader
 {
     public enum TaskStatus
     {
-        BeBorn,
+        Waiting,
         Running, 
-        Runnable, //not running, just able to run
         Pending,//dead, but not finished
-        Dead,//not finish, but dead
+        Sicked,//not finish, but dead
+        Dead,//
         Finished 
     }
 }

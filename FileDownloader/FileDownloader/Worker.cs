@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
+using FileDownloader.Event;
 namespace FileDownloader
 {
     public class Worker
@@ -16,6 +17,10 @@ namespace FileDownloader
         private HttpUtil HttpUtil = HttpUtil.getInstance();
         private bool done;
         private int errTimes = 0;
+
+        public delegate void WorkerStatusChanged(WorkerStatusChangedEvent e);
+        public event WorkerStatusChanged onWorkerStatusChanged;
+         
         public Worker(DownloadTask task, DownloadRange range)
         {
             this.task = task;
@@ -35,7 +40,7 @@ namespace FileDownloader
             {
                 fs = new FileStream(task.dir + task.fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
                 fs.Seek(range.from + current, SeekOrigin.Begin);
-                System.Diagnostics.Debug.Print(string.Format("thread {0} started.from {1},to {2}", System.Threading.Thread.CurrentThread.ManagedThreadId, range.from, range.to));
+               // System.Diagnostics.Debug.Print(string.Format("thread {0} started.from {1},to {2}", System.Threading.Thread.CurrentThread.ManagedThreadId, range.from, range.to));
                 res = HttpUtil.get(task.url, range.from + current, range.to);
                 Stream stream = res.GetResponseStream();
                 byte[] buffer = new byte[SysConfig.DOWNLOAD_UNIT];
@@ -43,8 +48,8 @@ namespace FileDownloader
                 bool pause = false;
                 while ((len = stream.Read(buffer, 0, SysConfig.DOWNLOAD_UNIT)) > 0)
                 {
-                    errTimes++;
-                    if (task.getStatus() == TaskStatus.Pending || task.getStatus() == TaskStatus.Dead)
+                    
+                    if (task.getStatus() != TaskStatus.Running)
                     {
                         pause = true;
                         break;
@@ -53,22 +58,31 @@ namespace FileDownloader
                     fs.Write(buffer, 0, len);
                     fs.Flush();
                     current += len;
-                   // if (errTimes == 50)
-                      //  throw new Exception("err err");
+                   
                 }
                 done = !pause;
-                if(done)
-                    task.fireWorkDone(); 
+                if(done){
+                  //  task.fireWorkDone(); 
+                    onWorkerStatusChanged(new WorkerStatusChangedEvent(this,WorkerStatus.Working,WorkerStatus.Finished));
+                }
             }
             catch (Exception e)
             {
-               
+                errTimes++;
                 string id = this.task.getId();
                
                 done = false;
-              
-                doWork();
-                Logger.getLogger().error("task "+id+", worker "+this.id+" got exception "+e.ToString());
+                
+                
+                Logger.getLogger().error("task "+id+", worker "+this.id+" got exception "+e.Message);
+                if (errTimes < 10)
+                {
+                    doWork();
+                }
+                else
+                {
+                    onWorkerStatusChanged(new WorkerStatusChangedEvent(this,WorkerStatus.Working,WorkerStatus.Sicked));
+                }
             }
             finally
             {

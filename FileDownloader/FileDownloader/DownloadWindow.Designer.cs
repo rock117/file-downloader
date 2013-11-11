@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DownloadWindow));
             this.leftPanel = new System.Windows.Forms.Panel();
+            this.allTaskBtn = new System.Windows.Forms.Button();
+            this.downloadingBtn = new System.Windows.Forms.Button();
+            this.doneTaskBtn = new System.Windows.Forms.Button();
             this.rightPanel = new System.Windows.Forms.Panel();
             this.selectBtn = new System.Windows.Forms.Button();
             this.speedLabel = new System.Windows.Forms.Label();
@@ -49,6 +52,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.复制urlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除任务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.leftPanel.SuspendLayout();
             this.rightPanel.SuspendLayout();
             this.menuPanel.SuspendLayout();
             this.tablePanel.SuspendLayout();
@@ -61,10 +65,43 @@
             // leftPanel
             // 
             this.leftPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.leftPanel.Controls.Add(this.allTaskBtn);
+            this.leftPanel.Controls.Add(this.downloadingBtn);
+            this.leftPanel.Controls.Add(this.doneTaskBtn);
             this.leftPanel.Location = new System.Drawing.Point(-3, 1);
             this.leftPanel.Name = "leftPanel";
             this.leftPanel.Size = new System.Drawing.Size(169, 423);
             this.leftPanel.TabIndex = 0;
+            // 
+            // allTaskBtn
+            // 
+            this.allTaskBtn.Location = new System.Drawing.Point(27, 110);
+            this.allTaskBtn.Name = "allTaskBtn";
+            this.allTaskBtn.Size = new System.Drawing.Size(75, 23);
+            this.allTaskBtn.TabIndex = 2;
+            this.allTaskBtn.Text = "所有任务";
+            this.allTaskBtn.UseVisualStyleBackColor = true;
+            this.allTaskBtn.Click += new System.EventHandler(this.allTaskBtn_Click);
+            // 
+            // downloadingBtn
+            // 
+            this.downloadingBtn.Location = new System.Drawing.Point(27, 72);
+            this.downloadingBtn.Name = "downloadingBtn";
+            this.downloadingBtn.Size = new System.Drawing.Size(75, 23);
+            this.downloadingBtn.TabIndex = 1;
+            this.downloadingBtn.Text = "正在下载";
+            this.downloadingBtn.UseVisualStyleBackColor = true;
+            this.downloadingBtn.Click += new System.EventHandler(this.downloadingBtn_Click);
+            // 
+            // doneTaskBtn
+            // 
+            this.doneTaskBtn.Location = new System.Drawing.Point(27, 34);
+            this.doneTaskBtn.Name = "doneTaskBtn";
+            this.doneTaskBtn.Size = new System.Drawing.Size(75, 23);
+            this.doneTaskBtn.TabIndex = 0;
+            this.doneTaskBtn.Text = "已完成";
+            this.doneTaskBtn.UseVisualStyleBackColor = true;
+            this.doneTaskBtn.Click += new System.EventHandler(this.doneTaskBtn_Click);
             // 
             // rightPanel
             // 
@@ -230,6 +267,7 @@
             this.Name = "DownloadWindow";
             this.Text = "闪电貂";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DownloadWindow_FormClosed);
+            this.leftPanel.ResumeLayout(false);
             this.rightPanel.ResumeLayout(false);
             this.rightPanel.PerformLayout();
             this.menuPanel.ResumeLayout(false);
@@ -263,6 +301,9 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 复制urlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 删除任务ToolStripMenuItem;
+        private System.Windows.Forms.Button allTaskBtn;
+        private System.Windows.Forms.Button downloadingBtn;
+        private System.Windows.Forms.Button doneTaskBtn;
     }
 }
 
