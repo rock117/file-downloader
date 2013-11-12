@@ -11,25 +11,25 @@ namespace FileDownloader
     [Serializable]
     public class TaskManager
     {
-        private List<Task> activeTasks = new List<Task>();
+      //  private List<Task> activeTasks = new List<Task>();
         private List<Task> pendingTasks = new List<Task>();
         private List<Task> runningTasks = new List<Task>();
         private List<Task> finishedTasks = new List<Task>();
         private List<Task> waittingTasks = new List<Task>();
         private List<Task> deathTasks = new List<Task>();
         private List<Task> allTasks = new List<Task>();
-
+        private bool _ready = false;
         private Dictionary<TaskStatus, List<Task>> tasksDict = new Dictionary<TaskStatus, List<Task>>();
 
 
-        private static TaskManager taskManager = new TaskManager();
+      //  private static TaskManager taskManager = new TaskManager();
          
         static int currId = 1;
         private object lockObj = new object();
 
-        private TaskManager()
+        public TaskManager()
         {
-            tasksDict.Add(TaskStatus.Running, activeTasks);
+            tasksDict.Add(TaskStatus.Running, runningTasks);
             tasksDict.Add(TaskStatus.Pending, pendingTasks);
             tasksDict.Add(TaskStatus.Finished, finishedTasks);
             tasksDict.Add(TaskStatus.Waiting, waittingTasks);
@@ -91,7 +91,13 @@ namespace FileDownloader
       
             lock (lockObj)
             {
-               bool b1 = removeItem(activeTasks, taskId);
+                Task task = selectTask(taskId);
+                
+                if (task == null)
+                {
+                    return;
+                }
+               bool b1 = false;
                bool b2 = false, b3 = false, b4 = false, b5 = false;
                if(!b1)
                     b2 = removeItem(pendingTasks, taskId);
@@ -104,6 +110,7 @@ namespace FileDownloader
                if (!b5)
                    removeItem(deathTasks, taskId);
                removeItem(allTasks, taskId);
+               task.setStatus(TaskStatus.Dead);
             }
              
         }
@@ -128,7 +135,7 @@ namespace FileDownloader
                     task.rebirth();
                     task.setStatus(TaskStatus.Waiting);
                     removeItem(deathTasks, task);
-                    activeTasks.Add(task);
+                    waittingTasks.Add(task);
                 }
             }
 
@@ -161,17 +168,14 @@ namespace FileDownloader
             }
             return task;
         }
-        public static TaskManager getInstance()
-        {
-            return taskManager;
-        }
+        
         public List<Task> getActiveTasks()
         {
             return this.allTasks;
         }
         public void scheduleTask()
         {
-            while (true)
+            while (_ready)
             {
                 lock (lockObj)
                 {
@@ -192,16 +196,41 @@ namespace FileDownloader
 
         public static void freezeTasks(TaskManager manager)
         {
+            manager.stopAll();
             Serialize(manager);
         }
 
-      
+        private void stopAll()
+        {
+            lock (lockObj)
+            {
+                this._ready = false;
+                foreach (Task task in allTasks)
+                {
+                    if (task.getStatus() == TaskStatus.Running)
+                    {
+                        task.setStatus(TaskStatus.Waiting);
+                        removeItem(runningTasks, task);
+                        waittingTasks.Add(task);
+                    }
+                }//for each
+            }//lock end
+        }
+
+        public void ready()
+        {
+            this._ready = true;
+        }
+
         public static void Serialize(TaskManager manager)
         {
-           
+
             try
             {
-                FileStream fs = new FileStream(SysConfig.BASE_DIR + "/" + SysConfig.META_FILE, FileMode.Create);
+                string dir = GlobalConfig.getRootDir() + "/";
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                FileStream fs = new FileStream(dir+ SysConfig.META_FILE, FileMode.Create);
                 BinaryFormatter f = new BinaryFormatter();
                 f.Serialize(fs, manager);
                 fs.Close();
@@ -214,7 +243,7 @@ namespace FileDownloader
         {
             try
             {
-                FileStream fs = new FileStream(SysConfig.BASE_DIR + "/" + SysConfig.META_FILE, FileMode.Open);
+                FileStream fs = new FileStream(GlobalConfig.getRootDir() + "/" + SysConfig.META_FILE, FileMode.Open);
                 BinaryFormatter f = new BinaryFormatter();
                 TaskManager manager = (TaskManager)f.Deserialize(fs);
                 fs.Close();
@@ -224,7 +253,7 @@ namespace FileDownloader
             {
                 return null;
             }
-           
+            return null;
         }
 
         public List<DownloadTaskEntry> getAllTasks()

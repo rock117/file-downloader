@@ -5,6 +5,7 @@ using System.Text;
 
 namespace FileDownloader
 {
+    [Serializable]
     public class DownloadRange
     {
         public long from { get; set; }

@@ -64,6 +64,11 @@ namespace FileDownloader
 
         }
 
+        private void NewDownloadForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
         
     }
 }

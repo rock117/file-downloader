@@ -7,6 +7,7 @@ using System.IO;
 using FileDownloader.Event;
 namespace FileDownloader
 {
+    [Serializable]
     public class Worker
     {
         string id;
@@ -14,7 +15,7 @@ namespace FileDownloader
         private DownloadRange range;
         private MemoryStream stream;
         private long current = 0;
-        private HttpUtil HttpUtil = HttpUtil.getInstance();
+        
         private bool done;
         private int errTimes = 0;
 
@@ -41,7 +42,7 @@ namespace FileDownloader
                 fs = new FileStream(task.dir + task.fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
                 fs.Seek(range.from + current, SeekOrigin.Begin);
                // System.Diagnostics.Debug.Print(string.Format("thread {0} started.from {1},to {2}", System.Threading.Thread.CurrentThread.ManagedThreadId, range.from, range.to));
-                res = HttpUtil.get(task.url, range.from + current, range.to);
+                res = HttpUtil.getInstance().get(task.url, range.from + current, range.to);
                 Stream stream = res.GetResponseStream();
                 byte[] buffer = new byte[SysConfig.DOWNLOAD_UNIT];
                 int len;

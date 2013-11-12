@@ -46,7 +46,7 @@ namespace FileDownloader
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.ServicePoint.ConnectionLimit = Int32.MaxValue;
-            
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0";
             //System.Net.WebProxy proxy = new WebProxy("127.0.0.1", 8888);
            // request.Proxy = proxy;
             if (from != null && to != null)

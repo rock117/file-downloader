@@ -29,7 +29,7 @@ namespace FileDownloader
     {
 
         private List<Task> taskList = new List<Task>();
-        private TaskManager taskManager = TaskManager.getInstance();
+        private TaskManager taskManager = TaskManagerFactory.getInstance().getManager();
         private const long _1K = 1024;
         private const long _1M = _1K * 1024;
 
@@ -48,7 +48,7 @@ namespace FileDownloader
         private const int SPEED = 3;
         private const int LEFT_TIME = 4;
         private const int FINISHED_TIME = 4;
-
+        private bool exit = false;
 
 
 
@@ -62,7 +62,8 @@ namespace FileDownloader
             this.taskGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.taskGrid.ContextMenuStrip = contextMenuStrip1;
             this.initGrid();
-            
+
+            taskManager.ready();
             new Thread(new ThreadStart(taskManager.scheduleTask)).Start();
             new Thread(new ThreadStart(scanTask)).Start();
         }
@@ -81,7 +82,10 @@ namespace FileDownloader
         {
            
         }
-
+        private bool isExit()
+        {
+            return exit;
+        }
         private void setSpeedText(object sender, DoWorkEventArgs e)
         {
             this.speedLabel.Text = this.speedTxt;
@@ -96,6 +100,9 @@ namespace FileDownloader
             this.taskGrid.Columns[3].Name = "下载速度";
             this.taskGrid.Columns[4].Name = "剩余时间";
             this.taskGrid.Columns[5].Name = "完成时间";
+
+           List<DownloadTaskEntry> tasks =  taskManager.getAllTasks();
+           this.addRows(tasks);
         }
         
         private void showFinishedTasks()
@@ -176,7 +183,7 @@ namespace FileDownloader
             for (int i = 0; i < n; i++)
             {
                 string fileName = fileNames[i];
-                Task task = TaskManager.getInstance().createTask(url,dir, fileName);
+                Task task = this.taskManager.createTask(url,dir, fileName);
                 this.addRow(convert((DownloadTask)task));
                 taskList.Add(task);
             }
@@ -186,14 +193,17 @@ namespace FileDownloader
 
         private void scanTask()
         {
-            while (true)
+            while (!exit)
             {
                 List<DownloadTaskEntry> taskList = taskManager.getAllTasks();
                 double speed = 0.0;
+                int finishTotal = 0;
                 foreach (DownloadTaskEntry taskEntry in taskList)
                 {
                     speed += taskEntry.speedL;
                     updateGrid(taskEntry);
+                    if (taskEntry.isDone)
+                        finishTotal++;
                 }
 
                 string speedStr = NumberUtil.toFixed(speed, 1) + " k/s";
@@ -203,7 +213,7 @@ namespace FileDownloader
                 }
                 this.speedTxt = "下载速度 " + speedStr;
                 this.speedLabel.Text = this.speedTxt;
-
+                this.doneTaskBtn.Text = "已完成(" + finishTotal + ")";
                 switch (this.showMode)
                 {
                     case ShowMode.All:
@@ -376,20 +386,28 @@ namespace FileDownloader
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-             
-            //int rowNum = this.taskGrid.SelectedRows.Count;
-            //List<DataGridViewRow> list = new List<DataGridViewRow>();
-            //for (int i = 0; i < rowNum; i++)
-            //{
-            //    string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
-            //    taskManager.removeTask(id);
-            //    list.Add(this.taskGrid.SelectedRows[i]);
-            //}
+            try
+            {
+                int rowNum = this.taskGrid.SelectedRows.Count;
+                List<DataGridViewRow> list = new List<DataGridViewRow>();
+                for (int i = 0; i < rowNum; i++)
+                {
+                    string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
+                    taskManager.removeTask(id);
+                    list.Add(this.taskGrid.SelectedRows[i]);
+                }
 
-            //foreach (DataGridViewRow row in list)
-            //{
-            //    this.taskGrid.Rows.Remove(row);
-            //}
+                foreach (DataGridViewRow row in list)
+                {
+                    this.taskGrid.Rows.Remove(row);
+                }
+            }
+            catch (Exception except)
+            {
+
+            }
+
+           
 
         }
 
@@ -402,22 +420,8 @@ namespace FileDownloader
 
         private void DownloadWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            int rowNum = this.taskGrid.Rows.Count;
-            for (int i = 0; i < rowNum; i++)
-            {
-              
-                try
-                {
-                    string id = this.taskGrid.Rows[i].Cells[0].Value.ToString();
-                    taskManager.removeTask(id);
-                }
-                catch (Exception ee)
-                {
-
-                }
-            }
-            TaskManager.freezeTasks(taskManager);
-           
+            this.exit = true;
+            TaskManager.freezeTasks(taskManager);           
         }
 
         private void label1_Click(object sender, EventArgs e)

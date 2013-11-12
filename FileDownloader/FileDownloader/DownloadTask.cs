@@ -23,7 +23,7 @@ namespace FileDownloader
         private List<Worker> workers;
         public string id { get; set; }
 
-        private HttpUtil HttpUtil = HttpUtil.getInstance();
+     
         private TaskStatus status;
 
         public delegate void TaskStatusChanged(TaskStatusChangedEvent e);
@@ -144,7 +144,7 @@ namespace FileDownloader
 
         private void calcSize() {
             this.workers = new List<Worker>();
-            HttpWebResponse res = HttpUtil.get(url, 0, SysConfig.DOWNLOAD_UNIT);
+            HttpWebResponse res = HttpUtil.getInstance().get(url, 0, SysConfig.DOWNLOAD_UNIT);
             HttpStatusCode status = res.StatusCode;
             res.GetResponseStream().Close();
             res.Close();

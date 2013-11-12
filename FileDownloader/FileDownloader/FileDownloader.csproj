@@ -50,7 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConvertUtil.cs" />
+    <Compile Include="GlobalConfig.cs" />
+    <Compile Include="GlobalUtil.cs" />
     <Compile Include="DownloadRange.cs" />
     <Compile Include="DownloadTask.cs" />
     <Compile Include="DownloadTaskEntry.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="FileNameCreator.cs" />
     <Compile Include="FileUtil.cs" />
     <Compile Include="HourTimeConverter.cs" />
+    <Compile Include="HttpRequestHeaders.cs" />
     <Compile Include="HttpUtil.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NewDownloadForm.cs">

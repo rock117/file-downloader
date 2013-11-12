@@ -124,6 +124,7 @@
             this.Text = "新建下载任务";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewDownloadForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NewDownloadForm_FormClosed);
+            this.Load += new System.EventHandler(this.NewDownloadForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
