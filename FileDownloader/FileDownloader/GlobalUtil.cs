@@ -39,6 +39,7 @@ namespace FileDownloader
             DownloadTask task = (DownloadTask)_task;
             DownloadTaskEntry res = new DownloadTaskEntry();
             res.fileName = task.fileName;
+            res.url = task.url;
             res.id = task.id;
             res.isDone = task.isDone();
             res.leftTime = "--";

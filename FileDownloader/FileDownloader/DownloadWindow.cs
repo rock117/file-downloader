@@ -49,7 +49,7 @@ namespace FileDownloader
         private const int LEFT_TIME = 4;
         private const int FINISHED_TIME = 4;
         private bool exit = false;
-
+        private int rowIndexSelected = 0;
 
 
 
@@ -93,14 +93,15 @@ namespace FileDownloader
         protected void initGrid()
         {
             
-            this.taskGrid.ColumnCount = 6;
+            this.taskGrid.ColumnCount = 7;
             this.taskGrid.Columns[0].Visible = false;
             this.taskGrid.Columns[1].Name = "文件名";
             this.taskGrid.Columns[2].Name = "下载进度";
             this.taskGrid.Columns[3].Name = "下载速度";
             this.taskGrid.Columns[4].Name = "剩余时间";
             this.taskGrid.Columns[5].Name = "完成时间";
-
+            this.taskGrid.Columns[6].Name = "下载地址";
+            this.taskGrid.Columns[6].Visible = false;
            List<DownloadTaskEntry> tasks =  taskManager.getAllTasks();
            this.addRows(tasks);
         }
@@ -157,7 +158,7 @@ namespace FileDownloader
         }
         private void addRow(DownloadTaskEntry entry)
         {
-          this.taskGrid.Rows.Add(new string[] { entry.id, entry.fileName, entry.percent, entry.speed, entry.leftTime,GlobalUtil.formatTime(entry.finishedTime) });     
+          this.taskGrid.Rows.Add(new string[] { entry.id, entry.fileName, entry.percent, entry.speed, entry.leftTime,GlobalUtil.formatTime(entry.finishedTime),entry.url });     
         }
         private void newButton_Click(object sender, EventArgs e)
         {
@@ -334,11 +335,16 @@ namespace FileDownloader
         {
             //List<DataGridViewRow> rows = this.taskGrid.SelectedRows.cou;
             //错误	9	无法将类型“System.Windows.Forms.DataGridViewSelectedRowCollection”隐式转换为“System.Collections.Generic.List<System.Windows.Forms.DataGridViewRow>”	E:\program_data\git-hub-project\file-downloader\FileDownloader\FileDownloader\DownloadWindow.cs	202
-            int rowNum = this.taskGrid.SelectedRows.Count;
-            for (int i = 0; i < rowNum; i++ )
-            {
-               string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
-               taskManager.pauseTask(id);
+            try{ 
+                int rowNum = this.taskGrid.SelectedRows.Count;
+                for (int i = 0; i < rowNum; i++ )
+                {
+                   string id = this.taskGrid.SelectedRows[i].Cells[0].Value.ToString();
+                   taskManager.pauseTask(id);
+                }
+            }
+            catch(Exception exc){
+                
             }
         }
 
@@ -453,6 +459,7 @@ namespace FileDownloader
                 if (e.RowIndex >= 0)
                 {
                     this.taskGrid.ContextMenuStrip.Show(e.X,e.Y);
+                    this.rowIndexSelected = e.RowIndex;
                     //弹出操作菜单
                     //contextMenuStrip1.Show(MousePosition.X, MousePosition.Y);
                 }
@@ -466,7 +473,14 @@ namespace FileDownloader
 
         private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-          
+            try
+            {
+                string url = this.taskGrid.Rows[this.rowIndexSelected].Cells[6].Value.ToString();
+                Clipboard.SetDataObject(url);
+            }
+            catch (Exception exc)
+            {
+            }
         }
 
         private void taskGrid_MouseClick(object sender, MouseEventArgs e)

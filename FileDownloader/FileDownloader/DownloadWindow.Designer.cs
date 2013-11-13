@@ -70,14 +70,14 @@
             this.leftPanel.Controls.Add(this.doneTaskBtn);
             this.leftPanel.Location = new System.Drawing.Point(-3, 1);
             this.leftPanel.Name = "leftPanel";
-            this.leftPanel.Size = new System.Drawing.Size(169, 423);
+            this.leftPanel.Size = new System.Drawing.Size(169, 458);
             this.leftPanel.TabIndex = 0;
             // 
             // allTaskBtn
             // 
-            this.allTaskBtn.Location = new System.Drawing.Point(27, 110);
+            this.allTaskBtn.Location = new System.Drawing.Point(27, 119);
             this.allTaskBtn.Name = "allTaskBtn";
-            this.allTaskBtn.Size = new System.Drawing.Size(75, 23);
+            this.allTaskBtn.Size = new System.Drawing.Size(75, 25);
             this.allTaskBtn.TabIndex = 2;
             this.allTaskBtn.Text = "所有任务";
             this.allTaskBtn.UseVisualStyleBackColor = true;
@@ -85,9 +85,9 @@
             // 
             // downloadingBtn
             // 
-            this.downloadingBtn.Location = new System.Drawing.Point(27, 72);
+            this.downloadingBtn.Location = new System.Drawing.Point(27, 78);
             this.downloadingBtn.Name = "downloadingBtn";
-            this.downloadingBtn.Size = new System.Drawing.Size(75, 23);
+            this.downloadingBtn.Size = new System.Drawing.Size(75, 25);
             this.downloadingBtn.TabIndex = 1;
             this.downloadingBtn.Text = "正在下载";
             this.downloadingBtn.UseVisualStyleBackColor = true;
@@ -95,9 +95,9 @@
             // 
             // doneTaskBtn
             // 
-            this.doneTaskBtn.Location = new System.Drawing.Point(27, 34);
+            this.doneTaskBtn.Location = new System.Drawing.Point(27, 37);
             this.doneTaskBtn.Name = "doneTaskBtn";
-            this.doneTaskBtn.Size = new System.Drawing.Size(75, 23);
+            this.doneTaskBtn.Size = new System.Drawing.Size(75, 25);
             this.doneTaskBtn.TabIndex = 0;
             this.doneTaskBtn.Text = "已完成";
             this.doneTaskBtn.UseVisualStyleBackColor = true;
@@ -113,14 +113,14 @@
             this.rightPanel.Controls.Add(this.tablePanel);
             this.rightPanel.Location = new System.Drawing.Point(172, 1);
             this.rightPanel.Name = "rightPanel";
-            this.rightPanel.Size = new System.Drawing.Size(696, 470);
+            this.rightPanel.Size = new System.Drawing.Size(696, 509);
             this.rightPanel.TabIndex = 1;
             // 
             // selectBtn
             // 
-            this.selectBtn.Location = new System.Drawing.Point(268, 433);
+            this.selectBtn.Location = new System.Drawing.Point(287, 469);
             this.selectBtn.Name = "selectBtn";
-            this.selectBtn.Size = new System.Drawing.Size(36, 23);
+            this.selectBtn.Size = new System.Drawing.Size(36, 25);
             this.selectBtn.TabIndex = 4;
             this.selectBtn.Text = "...";
             this.selectBtn.UseVisualStyleBackColor = true;
@@ -129,26 +129,26 @@
             // speedLabel
             // 
             this.speedLabel.AutoSize = true;
-            this.speedLabel.Location = new System.Drawing.Point(497, 436);
+            this.speedLabel.Location = new System.Drawing.Point(497, 472);
             this.speedLabel.Name = "speedLabel";
             this.speedLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.speedLabel.Size = new System.Drawing.Size(53, 12);
+            this.speedLabel.Size = new System.Drawing.Size(55, 13);
             this.speedLabel.TabIndex = 3;
             this.speedLabel.Text = "下载速度";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(55, 433);
+            this.textBox1.Location = new System.Drawing.Point(66, 469);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(207, 21);
+            this.textBox1.Size = new System.Drawing.Size(207, 20);
             this.textBox1.TabIndex = 2;
             // 
             // downloadLabel
             // 
             this.downloadLabel.AutoSize = true;
-            this.downloadLabel.Location = new System.Drawing.Point(5, 436);
+            this.downloadLabel.Location = new System.Drawing.Point(5, 472);
             this.downloadLabel.Name = "downloadLabel";
-            this.downloadLabel.Size = new System.Drawing.Size(53, 12);
+            this.downloadLabel.Size = new System.Drawing.Size(55, 13);
             this.downloadLabel.TabIndex = 0;
             this.downloadLabel.Text = "下载目录";
             // 
@@ -161,23 +161,23 @@
             this.menuPanel.Controls.Add(this.startButton);
             this.menuPanel.Location = new System.Drawing.Point(3, 3);
             this.menuPanel.Name = "menuPanel";
-            this.menuPanel.Size = new System.Drawing.Size(601, 49);
+            this.menuPanel.Size = new System.Drawing.Size(601, 53);
             this.menuPanel.TabIndex = 1;
             // 
             // exploreLabel
             // 
             this.exploreLabel.Image = ((System.Drawing.Image)(resources.GetObject("exploreLabel.Image")));
-            this.exploreLabel.Location = new System.Drawing.Point(404, 8);
+            this.exploreLabel.Location = new System.Drawing.Point(404, 9);
             this.exploreLabel.Name = "exploreLabel";
-            this.exploreLabel.Size = new System.Drawing.Size(27, 23);
+            this.exploreLabel.Size = new System.Drawing.Size(27, 25);
             this.exploreLabel.TabIndex = 5;
             this.exploreLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(310, 8);
+            this.deleteButton.Location = new System.Drawing.Point(310, 9);
             this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(75, 23);
+            this.deleteButton.Size = new System.Drawing.Size(75, 25);
             this.deleteButton.TabIndex = 3;
             this.deleteButton.Text = "删除";
             this.deleteButton.UseVisualStyleBackColor = true;
@@ -185,9 +185,9 @@
             // 
             // newButton
             // 
-            this.newButton.Location = new System.Drawing.Point(217, 8);
+            this.newButton.Location = new System.Drawing.Point(217, 9);
             this.newButton.Name = "newButton";
-            this.newButton.Size = new System.Drawing.Size(75, 23);
+            this.newButton.Size = new System.Drawing.Size(75, 25);
             this.newButton.TabIndex = 2;
             this.newButton.Text = "新建";
             this.newButton.UseVisualStyleBackColor = true;
@@ -195,9 +195,9 @@
             // 
             // pauseButton
             // 
-            this.pauseButton.Location = new System.Drawing.Point(109, 8);
+            this.pauseButton.Location = new System.Drawing.Point(109, 9);
             this.pauseButton.Name = "pauseButton";
-            this.pauseButton.Size = new System.Drawing.Size(75, 23);
+            this.pauseButton.Size = new System.Drawing.Size(75, 25);
             this.pauseButton.TabIndex = 1;
             this.pauseButton.Text = "暂停";
             this.pauseButton.UseVisualStyleBackColor = true;
@@ -205,9 +205,9 @@
             // 
             // startButton
             // 
-            this.startButton.Location = new System.Drawing.Point(12, 8);
+            this.startButton.Location = new System.Drawing.Point(12, 9);
             this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(75, 23);
+            this.startButton.Size = new System.Drawing.Size(75, 25);
             this.startButton.TabIndex = 0;
             this.startButton.Text = "开始";
             this.startButton.UseVisualStyleBackColor = true;
@@ -217,9 +217,9 @@
             // 
             this.tablePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tablePanel.Controls.Add(this.taskGrid);
-            this.tablePanel.Location = new System.Drawing.Point(3, 58);
+            this.tablePanel.Location = new System.Drawing.Point(3, 63);
             this.tablePanel.Name = "tablePanel";
-            this.tablePanel.Size = new System.Drawing.Size(601, 362);
+            this.tablePanel.Size = new System.Drawing.Size(601, 392);
             this.tablePanel.TabIndex = 0;
             // 
             // taskGrid
@@ -228,7 +228,7 @@
             this.taskGrid.Location = new System.Drawing.Point(3, 3);
             this.taskGrid.Name = "taskGrid";
             this.taskGrid.RowTemplate.Height = 23;
-            this.taskGrid.Size = new System.Drawing.Size(597, 354);
+            this.taskGrid.Size = new System.Drawing.Size(597, 384);
             this.taskGrid.TabIndex = 0;
             this.taskGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.taskGrid_CellContentClick);
             this.taskGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.taskGrid_CellMouseClick);
@@ -241,27 +241,27 @@
             this.复制urlToolStripMenuItem,
             this.删除任务ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(173, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(171, 48);
             this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
             // 
             // 复制urlToolStripMenuItem
             // 
             this.复制urlToolStripMenuItem.Name = "复制urlToolStripMenuItem";
-            this.复制urlToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.复制urlToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.复制urlToolStripMenuItem.Text = "复制网址到剪贴板";
             this.复制urlToolStripMenuItem.Click += new System.EventHandler(this.复制urlToolStripMenuItem_Click);
             // 
             // 删除任务ToolStripMenuItem
             // 
             this.删除任务ToolStripMenuItem.Name = "删除任务ToolStripMenuItem";
-            this.删除任务ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.删除任务ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.删除任务ToolStripMenuItem.Text = "删除任务";
             // 
             // DownloadWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(880, 473);
+            this.ClientSize = new System.Drawing.Size(880, 512);
             this.Controls.Add(this.rightPanel);
             this.Controls.Add(this.leftPanel);
             this.Name = "DownloadWindow";
